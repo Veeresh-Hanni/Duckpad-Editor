@@ -20,6 +20,8 @@ single-file executable builds through PyInstaller.
 - Font selection and editor zoom with `Ctrl` + mouse wheel
 - Status bar with cursor and document information
 - Native executable builds for Windows, macOS, and Linux
+- Linux builds avoid a known Qt/X11 window-icon crash in WSLg; the desktop
+  launcher still displays the application icon
 
 ## Technology
 

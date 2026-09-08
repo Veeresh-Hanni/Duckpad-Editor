@@ -49,7 +49,7 @@ jobs:
         env:
           QT_QPA_PLATFORM: offscreen
         run: |
-          python -c "from PyQt5.QtWidgets import QApplication; from duckpad import DuckPad; app = QApplication([]); editor = DuckPad(); assert not editor.windowIcon().isNull(), 'DuckPad icon failed to load'; editor.close(); app.quit()"
+          python -c "import sys; from PyQt5.QtWidgets import QApplication; from duckpad import DuckPad; app = QApplication([]); editor = DuckPad(); assert editor.windowIcon().isNull() == sys.platform.startswith('linux'), 'Unexpected DuckPad window icon state'; editor.close(); app.quit()"
 
       - name: Build Windows executable
         if: matrix.platform == 'windows'
@@ -78,6 +78,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ruby ruby-dev build-essential
           sudo gem install --no-document fpm
+          python -c "from PIL import Image; img = Image.open('duckpad.png'); img.resize((256, 256)).save('duckpad.png')"
           pyinstaller --noconsole --onefile --add-data "duckpad.png:." --name DuckPad_Editor duckpad.py
           mkdir -p package-root/usr/local/bin package-root/usr/share/icons/duckpad package-root/usr/share/applications
           install -m 0755 dist/DuckPad_Editor package-root/usr/local/bin/duckpad
@@ -102,6 +103,14 @@ jobs:
           fpm -s dir -t rpm -n duckpad-editor -v "${PACKAGE_VERSION}" -a x86_64 \
             --description "DuckPad Editor desktop text editor" -C package-root .
           test -x "dist/DuckPad_Editor"
+          set +e
+          timeout 10s env QT_QPA_PLATFORM=offscreen dist/DuckPad_Editor
+          STARTUP_STATUS=$?
+          set -e
+          if [[ "${STARTUP_STATUS}" -ne 124 ]]; then
+            echo "Packaged Linux app exited unexpectedly with status ${STARTUP_STATUS}"
+            exit "${STARTUP_STATUS}"
+          fi
           test -f "duckpad-editor_${PACKAGE_VERSION}_amd64.deb"
           test -f "duckpad-editor-${PACKAGE_VERSION}-1.x86_64.rpm"
           tar -czf "${{ matrix.archive }}" -C dist DuckPad_Editor

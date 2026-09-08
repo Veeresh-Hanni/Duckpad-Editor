@@ -15,7 +15,12 @@ MAX_RECENT_FILES = 5
 
 
 def load_application_icon():
-    """Load a small icon suitable for X11, Wayland, and desktop launchers."""
+    """Load a small icon on platforms where Qt window icons are stable."""
+    if sys.platform.startswith("linux"):
+        # Some X11 environments, including WSLg, can segfault while sending
+        # window icon data even when the pixmap itself is small. The desktop
+        # launcher still provides the Linux icon from /usr/share/icons.
+        return QIcon()
     bundle_root = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
     icon_path = os.path.join(bundle_root, "duckpad.png")
     pixmap = QPixmap(icon_path)
