@@ -107,8 +107,9 @@ The release workflow automatically:
 
 Install released packages system-wide:
 
-- **Windows:** download and run `DuckPad_Editor-windows.zip`, then launch the
-  executable.
+- **Windows:** download and run `DuckPad_Editor_Setup.exe`. It installs DuckPad
+  Editor into Program Files and creates Start Menu and optional desktop
+  shortcuts. The portable `DuckPad_Editor-windows.zip` is also available.
 - **macOS:** open `DuckPad_Editor-macos.dmg` and drag DuckPad Editor into
   Applications.
 - **Debian/Ubuntu:** run `sudo apt install ./duckpad-editor_<version>_amd64.deb`.

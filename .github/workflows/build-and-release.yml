@@ -55,8 +55,47 @@ jobs:
         if: matrix.platform == 'windows'
         shell: pwsh
         run: |
+          if ("${env:GITHUB_REF_TYPE}" -eq "tag" -and "${env:GITHUB_REF_NAME}" -match '^v\d+\.\d+\.\d+$') {
+            $packageVersion = "${env:GITHUB_REF_NAME}".Substring(1)
+          } else {
+            $packageVersion = "0.0.0.${env:GITHUB_RUN_NUMBER}"
+          }
           pyinstaller --noconsole --onefile --add-data "duckpad.png;." --name DuckPad_Editor duckpad.py
           if (!(Test-Path "dist\DuckPad_Editor.exe")) { throw "Windows executable was not created" }
+          @"
+          #define MyAppVersion "$packageVersion"
+          [Setup]
+          AppId={{B7C50D42-1F0E-4D08-9A37-9E6EF9A6D6A0}
+          AppName=DuckPad Editor
+          AppVersion={#MyAppVersion}
+          AppPublisher=Veeresh Hanni
+          DefaultDirName={autopf}\DuckPad Editor
+          DefaultGroupName=DuckPad Editor
+          OutputDir=.
+          OutputBaseFilename=DuckPad_Editor_Setup
+          Compression=lzma
+          SolidCompression=yes
+          ArchitecturesInstallIn64BitMode=x64
+          UninstallDisplayIcon={app}\DuckPad_Editor.exe
+          
+          [Files]
+          Source: "dist\DuckPad_Editor.exe"; DestDir: "{app}"; Flags: ignoreversion
+          Source: "duckpad.png"; DestDir: "{app}"; Flags: ignoreversion
+          
+          [Icons]
+          Name: "{autoprograms}\DuckPad Editor"; Filename: "{app}\DuckPad_Editor.exe"
+          Name: "{autodesktop}\DuckPad Editor"; Filename: "{app}\DuckPad_Editor.exe"; Tasks: desktopicon
+          
+          [Tasks]
+          Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional icons:"
+          "@ | Set-Content -Path windows-installer.iss -Encoding UTF8
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (!(Test-Path $iscc)) {
+            choco install innosetup --yes --no-progress
+          }
+          if (!(Test-Path $iscc)) { throw "Inno Setup compiler was not found at $iscc" }
+          & $iscc windows-installer.iss
+          if (!(Test-Path "DuckPad_Editor_Setup.exe")) { throw "Windows installer was not created" }
           Compress-Archive -Path dist\DuckPad_Editor.exe -DestinationPath $env:GITHUB_WORKSPACE\${{ matrix.archive }}
           if (!(Test-Path "${{ matrix.archive }}")) { throw "Windows release archive was not created" }
 
@@ -137,7 +176,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: DuckPad_Editor-windows
-          path: DuckPad_Editor-windows.zip
+          path: |
+            DuckPad_Editor_Setup.exe
+            DuckPad_Editor-windows.zip
           if-no-files-found: error
 
       - name: Upload macOS builds
