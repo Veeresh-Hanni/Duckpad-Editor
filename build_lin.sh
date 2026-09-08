@@ -53,7 +53,7 @@ if command -v fpm &> /dev/null; then
     cp duckpad.png /tmp/duckpad-pkg/usr/share/icons/duckpad/icon.png
     cp ~/.local/share/applications/duckpad.desktop /tmp/duckpad-pkg/usr/share/applications/
 
-    PACKAGE_VERSION="${DUCKPAD_VERSION:-1.0.2}"
+    PACKAGE_VERSION="${DUCKPAD_VERSION:-1.0.3}"
     fpm -s dir -t deb -n duckpad-editor -v "$PACKAGE_VERSION" -a x86_64 --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
     fpm -s dir -t rpm -n duckpad-editor -v "$PACKAGE_VERSION" -a x86_64 --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
     

@@ -10,7 +10,7 @@ from PyQt5.QtCore import Qt, QRect, QSize, QTimer
 
 DEVELOPER_NAME = "Veeresh Hanni"
 APP_NAME = "DuckPad Editor"
-APP_VERSION = "1.0.2"
+APP_VERSION = "1.0.3"
 MAX_RECENT_FILES = 5
 
 
@@ -216,7 +216,8 @@ class DuckPad(QMainWindow):
         self.is_dark_mode = False
         self.default_font_size = 11
         self.recent_files = []
-        self.setWindowIcon(load_application_icon())
+        if not sys.platform.startswith("linux"):
+            self.setWindowIcon(load_application_icon())
         self.init_ui()
         self.setup_autosave()
 
@@ -512,6 +513,9 @@ class DuckPad(QMainWindow):
 
 
 if __name__ == "__main__":
+    if sys.platform.startswith("linux"):
+        # Avoid shared-memory X11 paths that can crash Qt under WSLg/XWayland.
+        os.environ.setdefault("QT_X11_NO_MITSHM", "1")
     app = QApplication(sys.argv)
     editor = DuckPad()
     editor.show()

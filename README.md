@@ -20,7 +20,7 @@ single-file executable builds through PyInstaller.
 - Font selection and editor zoom with `Ctrl` + mouse wheel
 - Status bar with cursor and document information
 - Native executable builds for Windows, macOS, and Linux
-- Linux builds avoid a known Qt/X11 window-icon crash in WSLg; the desktop
+- Linux builds avoid known Qt/X11 crashes in WSLg/XWayland; the desktop
   launcher still displays the application icon
 
 ## Technology
@@ -124,7 +124,7 @@ Remove an older package before installing a fresh release:
 ```bash
 sudo apt remove duckpad-editor
 sudo apt autoremove
-sudo apt install ./duckpad-editor_1.0.2_amd64.deb
+sudo apt install ./duckpad-editor_1.0.3_amd64.deb
 duckpad
 ```
 
@@ -133,10 +133,10 @@ For a failed tag that has not been published successfully, remove and recreate
 it before pushing:
 
 ```bash
-git tag -d v1.0.2
-git push origin --delete v1.0.2
-git tag v1.0.2
-git push origin v1.0.2
+git tag -d v1.0.3
+git push origin --delete v1.0.3
+git tag v1.0.3
+git push origin v1.0.3
 ```
 
 ## Project structure

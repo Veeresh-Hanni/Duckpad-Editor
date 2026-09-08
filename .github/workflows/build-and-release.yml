@@ -76,7 +76,7 @@ jobs:
         if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y ruby ruby-dev build-essential
+          sudo apt-get install -y ruby ruby-dev build-essential xvfb
           sudo gem install --no-document fpm
           python -c "from PIL import Image; img = Image.open('duckpad.png'); img.thumbnail((256, 256)); img.save('duckpad-build.png')"
           pyinstaller --noconsole --onefile --icon=duckpad-build.png --add-data "duckpad.png:." --name DuckPad_Editor duckpad.py
@@ -105,7 +105,7 @@ jobs:
             --description "DuckPad Editor desktop text editor" -C package-root .
           test -x "dist/DuckPad_Editor"
           set +e
-          timeout 10s env QT_QPA_PLATFORM=offscreen dist/DuckPad_Editor
+          timeout 10s env QT_X11_NO_MITSHM=1 xvfb-run -a dist/DuckPad_Editor
           STARTUP_STATUS=$?
           set -e
           if [[ "${STARTUP_STATUS}" -ne 124 ]]; then
