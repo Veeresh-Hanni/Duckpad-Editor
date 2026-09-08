@@ -76,7 +76,10 @@ jobs:
         if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y ruby ruby-dev build-essential xvfb
+          sudo apt-get install -y ruby ruby-dev build-essential \
+            libgl1 libx11-xcb1 libxcb1 libxcb-cursor0 libxcb-image0 \
+            libxcb-keysyms1 libxcb-randr0 libxcb-render0 libxcb-shape0 \
+            libxcb-xinerama0 libxcb-xfixes0 libxkbcommon0 libxkbcommon-x11-0
           sudo gem install --no-document fpm
           python -c "from PIL import Image; img = Image.open('duckpad.png'); img.thumbnail((256, 256)); img.save('duckpad-build.png')"
           pyinstaller --noconsole --onefile --icon=duckpad-build.png --add-data "duckpad.png:." --name DuckPad_Editor duckpad.py
@@ -100,12 +103,24 @@ jobs:
           fi
           rm -f duckpad-editor_*.deb duckpad-editor-*.rpm
           fpm -s dir -t deb -n duckpad-editor -v "${PACKAGE_VERSION}" -a amd64 \
+            --depends libgl1 --depends libx11-xcb1 --depends libxcb1 \
+            --depends libxcb-cursor0 --depends libxcb-image0 \
+            --depends libxcb-keysyms1 --depends libxcb-randr0 \
+            --depends libxcb-render0 --depends libxcb-shape0 \
+            --depends libxcb-xinerama0 --depends libxcb-xfixes0 \
+            --depends libxkbcommon0 --depends libxkbcommon-x11-0 \
             --description "DuckPad Editor desktop text editor" -C package-root .
           fpm -s dir -t rpm -n duckpad-editor -v "${PACKAGE_VERSION}" -a x86_64 \
+            --depends mesa-libGL --depends libX11-xcb --depends libxcb \
+            --depends libxcb-cursor --depends libxcb-image \
+            --depends xcb-util-keysyms --depends libxcb-randr \
+            --depends libxcb-render-util --depends libxcb-shape \
+            --depends libxcb-xinerama --depends libxcb-xfixes \
+            --depends libxkbcommon --depends libxkbcommon-x11 \
             --description "DuckPad Editor desktop text editor" -C package-root .
           test -x "dist/DuckPad_Editor"
           set +e
-          timeout 10s env QT_X11_NO_MITSHM=1 xvfb-run -a dist/DuckPad_Editor
+          timeout 10s env QT_QPA_PLATFORM=offscreen QT_X11_NO_MITSHM=1 dist/DuckPad_Editor
           STARTUP_STATUS=$?
           set -e
           if [[ "${STARTUP_STATUS}" -ne 124 ]]; then

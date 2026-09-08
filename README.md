@@ -114,6 +114,10 @@ Install released packages system-wide:
 - **Debian/Ubuntu:** run `sudo apt install ./duckpad-editor_<version>_amd64.deb`.
 - **Fedora/RHEL:** run `sudo dnf install ./duckpad-editor-<version>-1.x86_64.rpm`.
 
+Linux packages declare the required Qt/X11 runtime libraries automatically.
+If you use the portable archive instead, install the equivalent system X11
+libraries before launching DuckPad.
+
 You can also download the latest successful build from the **Actions >
 Build DuckPad Editor > Artifacts** page without creating a release.
 
@@ -124,7 +128,7 @@ Remove an older package before installing a fresh release:
 ```bash
 sudo apt remove duckpad-editor
 sudo apt autoremove
-sudo apt install ./duckpad-editor_1.0.3_amd64.deb
+sudo apt install ./duckpad-editor_1.0.4_amd64.deb
 duckpad
 ```
 
@@ -133,10 +137,10 @@ For a failed tag that has not been published successfully, remove and recreate
 it before pushing:
 
 ```bash
-git tag -d v1.0.3
-git push origin --delete v1.0.3
-git tag v1.0.3
-git push origin v1.0.3
+git tag -d v1.0.4
+git push origin --delete v1.0.4
+git tag v1.0.4
+git push origin v1.0.4
 ```
 
 ## Project structure

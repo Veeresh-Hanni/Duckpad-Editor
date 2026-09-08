@@ -53,9 +53,23 @@ if command -v fpm &> /dev/null; then
     cp duckpad.png /tmp/duckpad-pkg/usr/share/icons/duckpad/icon.png
     cp ~/.local/share/applications/duckpad.desktop /tmp/duckpad-pkg/usr/share/applications/
 
-    PACKAGE_VERSION="${DUCKPAD_VERSION:-1.0.3}"
-    fpm -s dir -t deb -n duckpad-editor -v "$PACKAGE_VERSION" -a x86_64 --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
-    fpm -s dir -t rpm -n duckpad-editor -v "$PACKAGE_VERSION" -a x86_64 --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
+    PACKAGE_VERSION="${DUCKPAD_VERSION:-1.0.4}"
+    fpm -s dir -t deb -n duckpad-editor -v "$PACKAGE_VERSION" -a x86_64 \
+        --depends libgl1 --depends libx11-xcb1 --depends libxcb1 \
+        --depends libxcb-cursor0 --depends libxcb-image0 \
+        --depends libxcb-keysyms1 --depends libxcb-randr0 \
+        --depends libxcb-render0 --depends libxcb-shape0 \
+        --depends libxcb-xinerama0 --depends libxcb-xfixes0 \
+        --depends libxkbcommon0 --depends libxkbcommon-x11-0 \
+        --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
+    fpm -s dir -t rpm -n duckpad-editor -v "$PACKAGE_VERSION" -a x86_64 \
+        --depends mesa-libGL --depends libX11-xcb --depends libxcb \
+        --depends libxcb-cursor --depends libxcb-image \
+        --depends xcb-util-keysyms --depends libxcb-randr \
+        --depends libxcb-render-util --depends libxcb-shape \
+        --depends libxcb-xinerama --depends libxcb-xfixes \
+        --depends libxkbcommon --depends libxkbcommon-x11 \
+        --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
     
     rm -rf /tmp/duckpad-pkg
 fi
