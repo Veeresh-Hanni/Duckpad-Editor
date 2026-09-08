@@ -70,8 +70,8 @@ The repository includes convenience scripts for local builds:
 | Platform | Command | Output |
 | --- | --- | --- |
 | Windows | `build_win.bat` | `dist/DuckPad_Editor.exe` |
-| macOS | `./build_mac.sh` | `dist/DuckPad Editor.app` |
-| Linux | `./build_lin.sh` | `dist/duckpad` |
+| macOS | `./build_mac.sh` | `dist/DuckPad_Editor-macos.dmg` |
+| Linux | `./build_lin.sh` | `dist/duckpad`, `.deb`, and `.rpm` |
 
 The local scripts also install the application on the host system. For a
 portable build without installation, run PyInstaller directly:
@@ -98,8 +98,10 @@ The release workflow automatically:
 2. Creates a macOS `.dmg` installer.
 3. Creates Linux `.deb` and `.rpm` system packages.
 4. Archives portable builds for each platform.
-5. Creates a GitHub Release for the tag.
-6. Uploads all installers and archives as release assets.
+5. Runs a headless startup smoke test to verify icon loading.
+6. Verifies the executable, bundled icon, and installer files before publishing.
+7. Creates a GitHub Release for the tag.
+8. Uploads all installers and archives as release assets.
 
 Install released packages system-wide:
 

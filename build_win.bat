@@ -13,7 +13,7 @@ if exist dist rmdir /s /q dist
 if exist *.spec del /f /q *.spec
 
 :: 3. Build single executable with icon
-pyinstaller --noconsole --onefile --icon=duckpad.png --name="DuckPad_Editor" duckpad.py
+pyinstaller --noconsole --onefile --icon=duckpad.png --add-data "duckpad.png;." --name="DuckPad_Editor" duckpad.py
 
 :: 4. System Installation
 set INSTALL_DIR=C:\Program Files\DuckPad

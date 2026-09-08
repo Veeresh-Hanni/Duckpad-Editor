@@ -16,9 +16,13 @@ python3 -c "from PIL import Image; img = Image.open('duckpad.png'); img.resize((
 rm -rf build dist *.spec
 
 # 4. Build macOS .app Bundle
-pyinstaller --noconsole --windowed --icon=icon.icns --name="DuckPad Editor" duckpad.py
+pyinstaller --noconsole --windowed --icon=icon.icns --add-data "duckpad.png:." --name="DuckPad Editor" duckpad.py
 
-# 5. Move to Applications folder
+# 5. Create a drag-and-drop installer image
+hdiutil create -volname "DuckPad Editor" -srcfolder "dist/DuckPad Editor.app" \
+    -ov -format UDZO "dist/DuckPad_Editor-macos.dmg"
+
+# 6. Move to Applications folder
 rm -rf "/Applications/DuckPad Editor.app"
 cp -R "dist/DuckPad Editor.app" /Applications/
 

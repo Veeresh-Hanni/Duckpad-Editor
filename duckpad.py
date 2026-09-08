@@ -5,13 +5,24 @@ from PyQt5.QtWidgets import (
     QAction, QMessageBox, QFontDialog, QStatusBar, QWidget,
     QDialog, QLabel, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QCheckBox
 )
-from PyQt5.QtGui import QFont, QColor, QPainter, QKeySequence,QIcon, QTextDocument, QTextCursor
+from PyQt5.QtGui import QFont, QColor, QPainter, QKeySequence, QIcon, QPixmap, QTextDocument, QTextCursor
 from PyQt5.QtCore import Qt, QRect, QSize, QTimer
 
 DEVELOPER_NAME = "Veeresh Hanni"
 APP_NAME = "DuckPad Editor"
 APP_VERSION = "1.0.0"
 MAX_RECENT_FILES = 5
+
+
+def load_application_icon():
+    """Load a small icon suitable for X11, Wayland, and desktop launchers."""
+    bundle_root = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    icon_path = os.path.join(bundle_root, "duckpad.png")
+    pixmap = QPixmap(icon_path)
+    if pixmap.isNull():
+        return QIcon()
+    pixmap = pixmap.scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+    return QIcon(pixmap)
 
 
 class LineNumberArea(QWidget):
@@ -200,7 +211,7 @@ class DuckPad(QMainWindow):
         self.is_dark_mode = False
         self.default_font_size = 11
         self.recent_files = []
-        self.setWindowIcon(QIcon("duckpad.png"))
+        self.setWindowIcon(load_application_icon())
         self.init_ui()
         self.setup_autosave()
 

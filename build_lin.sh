@@ -9,14 +9,14 @@ echo "=================================================="
 # 1. Install dependencies
 pip install PyQt5 pyinstaller Pillow
 
-# 2. Resize icon to 256x256 to prevent XCB window rendering errors
-python3 -c "from PIL import Image; img = Image.open('duckpad.png'); img.resize((256, 256)).save('duckpad.png')"
+# 2. Create a bounded build icon without modifying the source image
+python3 -c "from PIL import Image; img = Image.open('duckpad.png'); img.thumbnail((256, 256)); img.save('duckpad-build.png')"
 
 # 3. Clean temporary build cache
 rm -rf build dist *.spec /tmp/duckpad-pkg
 
 # 4. Compile binary with PyInstaller
-pyinstaller --noconsole --onefile --icon=duckpad.png --name="duckpad" duckpad.py
+pyinstaller --noconsole --onefile --icon=duckpad-build.png --add-data "duckpad.png:." --name="duckpad" duckpad.py
 
 # 5. System-wide installation
 sudo mv dist/duckpad /usr/local/bin/
@@ -39,6 +39,7 @@ EOF
 
 chmod +x ~/.local/share/applications/duckpad.desktop
 update-desktop-database ~/.local/share/applications/ || true
+rm -f duckpad-build.png
 
 # 6. Build .deb and .rpm packages if FPM is installed
 if command -v fpm &> /dev/null; then
