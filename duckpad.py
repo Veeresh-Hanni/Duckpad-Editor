@@ -10,7 +10,7 @@ from PyQt5.QtCore import Qt, QRect, QSize, QTimer
 
 DEVELOPER_NAME = "Veeresh Hanni"
 APP_NAME = "DuckPad Editor"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.2"
 MAX_RECENT_FILES = 5
 
 

@@ -90,8 +90,8 @@ systems. Every push and pull request runs the build matrix as a CI check.
 To publish a release:
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.0.2
+git push origin v1.0.2
 ```
 
 The release workflow automatically:
@@ -116,6 +116,28 @@ Install released packages system-wide:
 
 You can also download the latest successful build from the **Actions >
 Build DuckPad Editor > Artifacts** page without creating a release.
+
+### Clean Linux upgrade
+
+Remove an older package before installing a fresh release:
+
+```bash
+sudo apt remove duckpad-editor
+sudo apt autoremove
+sudo apt install ./duckpad-editor_1.0.2_amd64.deb
+duckpad
+```
+
+Release tags must be semantic versions in the form `vMAJOR.MINOR.PATCH`.
+For a failed tag that has not been published successfully, remove and recreate
+it before pushing:
+
+```bash
+git tag -d v1.0.2
+git push origin --delete v1.0.2
+git tag v1.0.2
+git push origin v1.0.2
+```
 
 ## Project structure
 

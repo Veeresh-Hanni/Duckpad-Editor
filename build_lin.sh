@@ -44,6 +44,7 @@ rm -f duckpad-build.png
 # 6. Build .deb and .rpm packages if FPM is installed
 if command -v fpm &> /dev/null; then
     echo "Creating .deb and .rpm packages..."
+    rm -f duckpad-editor_*.deb duckpad-editor-*.rpm
     mkdir -p /tmp/duckpad-pkg/usr/local/bin
     mkdir -p /tmp/duckpad-pkg/usr/share/icons/duckpad
     mkdir -p /tmp/duckpad-pkg/usr/share/applications
@@ -52,8 +53,9 @@ if command -v fpm &> /dev/null; then
     cp duckpad.png /tmp/duckpad-pkg/usr/share/icons/duckpad/icon.png
     cp ~/.local/share/applications/duckpad.desktop /tmp/duckpad-pkg/usr/share/applications/
 
-    fpm -s dir -t deb -n duckpad-editor -v 1.0.0 -a x86_64 --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
-    fpm -s dir -t rpm -n duckpad-editor -v 1.0.0 -a x86_64 --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
+    PACKAGE_VERSION="${DUCKPAD_VERSION:-1.0.2}"
+    fpm -s dir -t deb -n duckpad-editor -v "$PACKAGE_VERSION" -a x86_64 --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
+    fpm -s dir -t rpm -n duckpad-editor -v "$PACKAGE_VERSION" -a x86_64 --description "DuckPad Text Editor by Veeresh Hanni" -C /tmp/duckpad-pkg .
     
     rm -rf /tmp/duckpad-pkg
 fi
